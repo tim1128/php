@@ -1,0 +1,70 @@
+<?php
+//載入 db.php 檔案，連接資料庫
+require_once '../../php/db.php';
+require_once '../../php/functions.php';
+//print_r($_SESSION); //查看目前session內容
+
+//沒有 $_SESSION['is_login'] 這個值，或者 $_SESSION['is_login'] 為 false 都代表沒登入
+if(!isset($_SESSION['is_login']) || !$_SESSION['is_login'])
+{
+	//直接轉跳到 login.php
+	header("Location: ../login.php");
+}
+
+//取得所有商品資訊
+$products = get_product_information();
+?>
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <title>管理員</title>
+    <meta charset="utf-8">
+   
+
+  <body>
+    <!-- 頁首 -->
+		<?php include_once 'menu.php'; ?>
+		
+    <!-- 網站內容 -->
+    <div class="content">
+      <div class="container">
+	  //固定寬度
+        <div class="row">
+		//水平
+		  <br></br>	
+          <div class="col-xs-12">
+            <a href='product_add.php' class="btn btn-default">新增商品</a>
+          </div>
+          <div class="col-xs-12">
+            <!-- 資料列表 -->
+            <table class="table table-hover">
+              <tr>
+                <th>name</th>
+                <th>picture</th>
+                <th>price</th>
+                <th>cart</th>
+              </tr>
+              <?php if($products):?>
+                <?php foreach($products as $product):?>
+                  <tr>
+                    <td valign="center"><?php echo $product['id'] . '. ' . $product['product'];?></td>
+                    <td><img src="<?php echo "../" . $product['imagePath'];?>"></td>
+					<td valign="center"><?php echo $product['price'];?></td>
+                    <td>
+                      <a href='product_cart.php?product_id=<?php echo $product['id'];?>' class="btn btn-default">刪除</a>
+                    </td>
+                  </tr>
+                <?php endforeach;?>
+              <?php else:?>
+                <tr>
+                  <td colspan="4">無資料</td>
+                </tr>
+              <?php endif;?>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
